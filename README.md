@@ -86,11 +86,11 @@ Then open your browser and go to: `http://localhost:8080`
    - Wait for analysis to complete (status will update)
 
 3. **Play and Visualize**:
-   - Click "▶️ Play" to start audio playback
+   - Click "Play" to start audio playback
    - Watch the 3D visualization update in real-time!
    - A pulsing sphere shows the current position in timbre space
    - A colored trail shows the path through timbre space over time
-   - Use "⏸️ Pause" and "⏹️ Stop" to control playback
+   - Use "Pause" and "Stop" to control playback
 
 4. **Explore the Visualization**: 
    - **Left-click + drag**: Rotate the 3D space
@@ -174,7 +174,7 @@ Works best in:
 
 ## License
 
-MIT License - feel free to use and modify as needed.
+Apache 2.0
 
 ## Acknowledgments
 
