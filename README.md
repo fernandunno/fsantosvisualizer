@@ -163,14 +163,6 @@ Works best in:
 - The FFT implementation is simplified - for production use, consider using a dedicated FFT library
 - Some browsers may have limitations on audio file formats
 
-## Future Enhancements
-
-- Real-time audio analysis from microphone input
-- Export visualization as image or 3D model
-- Comparison mode for multiple audio files
-- Advanced filtering and clustering
-- Timeline visualization
-- More timbre features (chroma, tonality, etc.)
 
 ## License
 
