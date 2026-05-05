@@ -1,0 +1,22 @@
+{
+  "name": "3d-timbre-space-visualization",
+  "version": "1.0.0",
+  "description": "A 3D timbre space visualization platform for analyzing and exploring audio timbral characteristics",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p 8080 -o",
+    "dev": "npx http-server . -p 8080 -o"
+  },
+  "keywords": [
+    "audio",
+    "timbre",
+    "visualization",
+    "3d",
+    "music",
+    "analysis"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Timbre Space Visualization</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="floating-header">
+            <h1>TIMBRE VISUALIZATION</h1>
+            <p class="subtitle">f.santos 3d</p>
+        </header>
+        <div class="top-toggle-group">
+            <button id="toggleControlsBtn" class="toggle-controls-btn" type="button">Hide Controls</button>
+            <button id="toggleCentroidGraphBtn" class="toggle-centroid-btn" type="button">Show Centroid Graph</button>
+            <button id="togglePitchHarmonicBtn" class="toggle-centroid-btn" type="button">Show Pitch / Harmonics</button>
+            <button id="toggleHarmonicTensionBtn" class="toggle-centroid-btn" type="button">Show Harmonic Tension</button>
+            <button id="toggleVideoOverlayBtn" class="toggle-video-btn hidden" type="button">Show Video</button>
+            <button id="openVectorMathBtn" class="toggle-centroid-btn" type="button">Analysis</button>
+            <button id="toggleAllUiBtn" class="toggle-centroid-btn" type="button">Hide All UI</button>
+        </div>
+        <div class="audio-meters">
+            <div class="waveform-window">
+                <div class="fft-title">WAVEFORM</div>
+                <canvas id="waveformCanvas"></canvas>
+            </div>
+            <div class="fft-window">
+                <div class="fft-title">FFT</div>
+                <canvas id="fftCanvas"></canvas>
+            </div>
+        </div>
+
+        <div id="controlsPanel" class="controls-panel floating-controls">
+            <div id="controlsDragHandle" class="panel-drag-handle">
+                <span>Control Panel</span>
+                <span class="drag-hint">Drag</span>
+            </div>
+            <div class="upload-section">
+                <label for="audioFile" class="upload-label">
+                    <span>Upload Audio or MP4</span>
+                    <input type="file" id="audioFile" accept="audio/*,video/mp4" hidden>
+                </label>
+                <button id="analyzeBtn" class="btn btn-primary" disabled>Analyze Media</button>
+                <button id="clearBtn" class="btn btn-secondary">Clear All</button>
+            </div>
+
+            <div class="playback-section">
+                <h3>Audio Playback</h3>
+                <div class="playback-controls">
+                    <button id="playBtn" class="btn btn-play" disabled>Play</button>
+                    <button id="pauseBtn" class="btn btn-pause" disabled>Pause</button>
+                    <button id="stopBtn" class="btn btn-stop" disabled>Stop</button>
+                </div>
+                <div class="timeline-container">
+                    <div class="timeline">
+                        <div id="timelineProgress" class="timeline-progress"></div>
+                        <div id="timelineHandle" class="timeline-handle"></div>
+                    </div>
+                    <div class="time-display">
+                        <span id="currentTime">0:00</span> / <span id="totalTime">0:00</span>
+                    </div>
+                </div>
+                <div class="playback-settings">
+                    <label>
+                        <input type="checkbox" id="showTrail" checked>
+                        Show Timbre Trail
+                    </label>
+                    <label>
+                        <input type="checkbox" id="realTimeMode" checked>
+                        Real-time Analysis
+                    </label>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <div class="info-item">
+                    <span class="info-label">Status:</span>
+                    <span id="statusText">Ready</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Analysis Points:</span>
+                    <span id="pointCount">0</span>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>Visualization Settings</h3>
+                <div class="setting-group">
+                    <label>
+                        <input type="checkbox" id="showGrid" checked>
+                        Show Grid
+                    </label>
+                </div>
+                <div class="setting-group">
+                    <label>
+                        <input type="checkbox" id="showAxes" checked>
+                        Show Axes
+                    </label>
+                </div>
+                <div class="setting-group">
+                    <label>
+                        <input type="checkbox" id="showLabels" checked>
+                        Show Labels
+                    </label>
+                </div>
+                <div class="setting-group">
+                    <label>
+                        <input type="checkbox" id="autoOrbitMode">
+                        Auto Orbit Around Aggregate
+                    </label>
+                </div>
+                <div class="setting-group">
+                    <label>
+                        <input type="checkbox" id="orbitPointMarkerMode">
+                        Orbit Around Point Marker
+                    </label>
+                </div>
+                <div class="setting-group">
+                    <label>
+                        Orbit Sensitivity:
+                        <input type="range" id="orbitSensitivity" min="0.01" max="0.5" step="0.01" value="0.08">
+                        <span id="orbitSensitivityValue">0.08</span>
+                    </label>
+                </div>
+                <div class="setting-group">
+                    <label>
+                        Point Size:
+                        <input type="range" id="pointSize" min="0.5" max="3" step="0.1" value="1.5">
+                        <span id="pointSizeValue">1.5</span>
+                    </label>
+                </div>
+                <div class="setting-group">
+                    <label>
+                        Motion Sensitivity:
+                        <input type="range" id="motionSensitivity" min="0.5" max="3" step="0.1" value="1.0">
+                        <span id="motionSensitivityValue">1.0</span>
+                    </label>
+                </div>
+                <div class="setting-group">
+                    <label>
+                        <input type="checkbox" id="amplitudeThresholdEnabled">
+                        Amplitude Threshold Filter
+                    </label>
+                </div>
+                <div class="setting-group">
+                    <label>
+                        Amplitude Threshold:
+                        <input type="range" id="amplitudeThreshold" min="0" max="1" step="0.001" value="0.150" disabled>
+                        <span id="amplitudeThresholdValue">0.150</span>
+                    </label>
+                </div>
+                <div class="setting-group">
+                    <label>
+                        <input type="checkbox" id="amplitudeThresholdRelativePeak" disabled>
+                        Scale Threshold to Waveform Peak
+                    </label>
+                </div>
+                <div class="settings-subcategory">
+                    <h4>Add Ons</h4>
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="fadePoints" checked>
+                            Fade Out Points
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <label>
+                            Fade Duration:
+                            <input type="range" id="fadeDuration" min="0.6" max="3.0" step="0.1" value="1.4">
+                            <span id="fadeDurationValue">1.4s</span>
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="rippleMode">
+                            Ripple Mode
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <label>
+                            Ripple Density:
+                            <input type="range" id="rippleDensity" min="1" max="8" step="1" value="3">
+                            <span id="rippleDensityValue">3</span>
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <label>
+                            Ripple Width:
+                            <input type="range" id="rippleWidth" min="0.04" max="0.28" step="0.01" value="0.12">
+                            <span id="rippleWidthValue">0.12</span>
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <label>
+                            Ripple Glow:
+                            <input type="range" id="rippleGlow" min="0.4" max="2.8" step="0.1" value="1.3">
+                            <span id="rippleGlowValue">1.3</span>
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <label>
+                            Ripple Opacity:
+                            <input type="range" id="rippleOpacity" min="0.1" max="1.5" step="0.05" value="1.0">
+                            <span id="rippleOpacityValue">1.00</span>
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <label>
+                            Ripple Duration:
+                            <input type="range" id="rippleDuration" min="0.25" max="1.8" step="0.05" value="0.9">
+                            <span id="rippleDurationValue">0.90s</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="legend-section">
+                <h3>Timbre Dimensions</h3>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #ff0000;"></span>
+                    <span>X: Spectral Centroid (Brightness)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #00ff00;"></span>
+                    <span>Y: Spectral Rolloff (High Frequency)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #0000ff;"></span>
+                    <span>Z: Zero Crossing Rate (Noisiness)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="visualization-container">
+            <div id="canvas-container"></div>
+        </div>
+
+        <div id="centroidGraphPanel" class="centroid-graph-panel hidden">
+            <div id="centroidGraphDragHandle" class="centroid-graph-header">
+                <div class="fft-title">SPECTRAL CENTROID vs AMPLITUDE</div>
+                <button id="closeCentroidGraphBtn" class="btn btn-small" type="button">Close</button>
+            </div>
+            <canvas id="centroidAmpCanvas"></canvas>
+            <div id="centroidGraphResizeHandle" class="centroid-graph-resize-handle" aria-hidden="true"></div>
+        </div>
+
+        <div id="pitchHarmonicPanel" class="pitch-harmonic-panel hidden">
+            <div id="pitchHarmonicDragHandle" class="pitch-harmonic-header">
+                <div class="fft-title">PITCH &amp; HARMONICS</div>
+                <button id="closePitchHarmonicBtn" class="btn btn-small" type="button">Close</button>
+            </div>
+            <canvas id="pitchHarmonicCanvas"></canvas>
+            <div id="pitchHarmonicResizeHandle" class="pitch-harmonic-resize-handle" aria-hidden="true"></div>
+        </div>
+
+        <div id="harmonicTensionPanel" class="harmonic-tension-panel hidden">
+            <div id="harmonicTensionDragHandle" class="harmonic-tension-header">
+                <div class="fft-title">HARMONIC TENSION / RELEASE</div>
+                <button id="closeHarmonicTensionBtn" class="btn btn-small" type="button">Close</button>
+            </div>
+            <canvas id="harmonicTensionCanvas"></canvas>
+            <div id="harmonicTensionResizeHandle" class="harmonic-tension-resize-handle" aria-hidden="true"></div>
+        </div>
+
+        <div id="videoOverlayPanel" class="video-overlay-panel hidden">
+            <div id="videoOverlayDragHandle" class="video-overlay-header">
+                <div class="fft-title">VIDEO OVERLAY</div>
+                <button id="closeVideoOverlayBtn" class="btn btn-small" type="button">Close</button>
+            </div>
+            <div id="videoOverlayContent" class="video-overlay-content"></div>
+            <div id="videoOverlayResizeHandle" class="video-overlay-resize-handle" aria-hidden="true"></div>
+        </div>
+
+        <div id="miniPlaybackTab" class="mini-playback-tab hidden">
+            <div class="mini-playback-title">Playback</div>
+            <div class="mini-playback-controls">
+                <button id="miniPlayBtn" class="btn btn-play" disabled>Play</button>
+                <button id="miniPauseBtn" class="btn btn-pause" disabled>Pause</button>
+                <button id="miniStopBtn" class="btn btn-stop" disabled>Stop</button>
+            </div>
+        </div>
+
+        <div id="pointInfo" class="point-info hidden">
+            <h3>Point Details</h3>
+            <div id="pointDetails"></div>
+            <button id="closeInfo" class="btn btn-small">Close</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="audioAnalyzer.js"></script>
+    <script src="visualizer.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

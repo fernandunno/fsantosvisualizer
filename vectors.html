@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timbre Analysis</title>
+    <link rel="stylesheet" href="vector-inspector.css">
+</head>
+<body>
+    <main class="wrap">
+        <header class="header">
+            <h1>Timbre Analysis Inspector</h1>
+            <p>Live view of normalization equations and labeled vectors in 3D timbre space.</p>
+        </header>
+
+        <section class="panel">
+            <h2>Normalization Equations</h2>
+            <div id="formulaList" class="formula-list"></div>
+            <p class="note">Vector magnitude: <code>sqrt(x^2 + y^2 + z^2)</code></p>
+        </section>
+
+        <section class="panel stats">
+            <div><strong>Total points:</strong> <span id="totalPoints">0</span></div>
+            <div><strong>File points:</strong> <span id="filePointCount">0</span></div>
+            <div><strong>Audio file:</strong> <span id="audioFileName">-</span></div>
+            <div><strong>Duration:</strong> <span id="analysisDuration">0.00s</span></div>
+            <div><strong>Aggregate center:</strong> <span id="aggregateCenter">(0.000, 0.000, 0.000)</span></div>
+            <div><strong>Analysis mode:</strong> <span id="analysisMode">raw-file</span></div>
+            <div><strong>Last update:</strong> <span id="lastUpdate">-</span></div>
+        </section>
+
+        <section class="panel">
+            <h2>3D Timbre Space Image</h2>
+            <div id="timbreImageViewport" class="timbre-image-viewport"></div>
+            <p id="timbreImageMeta" class="note">Waiting for analyzed audio file vectors...</p>
+        </section>
+
+        <section class="panel">
+            <h2>All Labeled Coordinates</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Type</th>
+                            <th>Brightness (Centroid)</th>
+                            <th>High Frequency (Rolloff)</th>
+                            <th>Noisiness (ZCR)</th>
+                            <th>Magnitude</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vectorTableBody">
+                        <tr><td colspan="6" class="empty">No vectors available yet.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="vector-inspector.js"></script>
+</body>
+</html>
